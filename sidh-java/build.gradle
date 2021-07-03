@@ -1,0 +1,30 @@
+apply plugin: 'java-library'
+apply plugin: 'maven'
+
+group = 'org.pqcrypto'
+version = '1.0.0'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', project(':sidh-native').file('src/main/java')]
+        }
+    }
+}
+
+task installArchives(type: Upload) {
+    description "Installs the artifacts to the local Maven repository."
+    configuration = configurations['archives']
+    repositories {
+        mavenDeployer {
+            repository url: "file://${System.properties['user.home']}/.m2/repository"
+        }
+    }
+}
